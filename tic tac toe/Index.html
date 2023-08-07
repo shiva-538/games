@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tic Tac Toe</title>
+    <style>
+        body {
+
+            
+            margin: 0;
+            background-color: #181436;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .heading {
+            font-size: 64px;
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: cursive;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.762);
+            overflow: hidden;
+            max-width: 300px;
+            margin: 10px;
+            color: wheat;
+            background-color: #322D57;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-size: 14px;
+            margin: 0;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: #0084FF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #005AB3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="heading">Tic Tac Toe</h1>
+
+    <div style="display: flex; justify-content: center; align-items: center; height: 70vh; margin: 0;">
+        <div class="card">
+            <img src="https://tse3.mm.bing.net/th?id=OIP.RfjHOwQ-BBUvFB6Yr8bbcgHaD_&pid=Api&P=0&h=180" alt="Card Image"
+                class="card-image">
+            <div class="card-content">
+                <h2 class="card-title">Player vs Player</h2>
+                <p class="card-text">Two friends can play this game</p>
+                <button class="btn" onclick="Player()">Play</button>
+            </div>
+        </div>
+        <div class="card">
+            <img src="https://tse4.mm.bing.net/th?id=OIP.gY-Tdv5nZQTu1AR5W6d47wHaG7&pid=Api&P=0&h=180" alt="Card Image"
+                class="card-image">
+            <div class="card-content">
+                <h2 class="card-title">Player vs Computer</h2>
+                <p class="card-text">One player can play with the computer</p>
+                <button class="btn" id="myButton" onclick="Computer()">Play</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function Player() {
+            window.location.href = "Player.html";
+        }
+
+        function Computer() {
+            window.location.href = "Computer.html";
+        }
+    </script>
+</body>
+
+</html>

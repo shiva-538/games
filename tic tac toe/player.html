@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tic Tac Toe</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #0f0c27;
+        }
+
+        .heading {
+            font-family: cursive;
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: wheat;
+            margin: 50px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 6px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border: 2px solid #444;
+            cursor: pointer;
+            font-family: 'Arial', sans-serif;
+            transition: background-color 0.3s;
+        }
+
+        .cell:hover {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="heading">Tic Tac Toe</h1>
+    <div class="board">
+        <div class="cell" onclick="makeMove(0)"></div>
+        <div class="cell" onclick="makeMove(1)"></div>
+        <div class="cell" onclick="makeMove(2)"></div>
+        <div class="cell" onclick="makeMove(3)"></div>
+        <div class="cell" onclick="makeMove(4)"></div>
+        <div class="cell" onclick="makeMove(5)"></div>
+        <div class="cell" onclick="makeMove(6)"></div>
+        <div class="cell" onclick="makeMove(7)"></div>
+        <div class="cell" onclick="makeMove(8)"></div>
+    </div>
+    <script>let board = ['', '', '', '', '', '', '', '', ''];
+        let currentPlayer = 'X';
+
+        function makeMove(index) {
+            if (board[index] === '') {
+                board[index] = currentPlayer;
+                document.getElementsByClassName('cell')[index].textContent = currentPlayer;
+                checkWinner();
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+                if (currentPlayer === 'O') {
+                    // Uncomment the following line to enable computer moves
+                    // makeComputerMove();
+                }
+            }
+        }
+
+        function checkWinner() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    alert(`${board[a]} wins!`);
+                    resetBoard();
+                    return;
+                }
+            }
+
+            if (!board.includes('')) {
+                alert("It's a draw!");
+                resetBoard();
+            }
+        }
+
+        function resetBoard() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            currentPlayer = 'X';
+            const cells = document.getElementsByClassName('cell');
+            for (const cell of cells) {
+                cell.textContent = '';
+            }
+        }
+
+        function makeComputerMove() {
+            const emptyCells = board.reduce((acc, value, index) => {
+                if (!value) acc.push(index);
+                return acc;
+            }, []);
+
+            if (emptyCells.length > 0) {
+                const randomIndex = Math.floor(Math.random() * emptyCells.length);
+                makeMove(emptyCells[randomIndex]);
+            }
+        }
+    </script>
+</body>
+
+</html>

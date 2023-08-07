@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tic-Tac-Toe</title>
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/addons/p5.sound.min.js"></script>
+</head>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #0f0c27;
+  }
+
+  .title {
+    font-family: cursive;
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: wheat;
+    margin: 50px;
+
+  }
+</style>
+
+<body>
+  <div class="title">
+    Tic-Tac-Toe
+  </div>
+  <div">
+
+    <script>
+      let board = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""],
+      ];
+      let ai = "X"; // The computer is X
+      let human = "O"; // The human is O
+      let currentPlayer = human; // Place after computer
+      let w;
+      let h;
+
+      function setup() {
+        createCanvas(400, 400); // Canvas width and height
+        w = width / 3; // Column width
+        h = height / 3; // Row width
+        // bestMove(); // AI goes first
+      }
+
+      function equals3(a, b, c) {
+        return a == b && b == c && a != ""; // Check equality
+      }
+
+      function checkWinner() {
+        let winner = null;
+
+        for (let i = 0; i < 3; i++) {
+          if (equals3(board[i][0], board[i][1], board[i][2])) {
+            // Row-wise
+            winner = board[i][0];
+          }
+        }
+
+        for (let i = 0; i < 3; i++) {
+          if (equals3(board[0][i], board[1][i], board[2][i])) {
+            // Column-wise
+            winner = board[0][i];
+          }
+        }
+
+        if (equals3(board[0][0], board[1][1], board[2][2])) {
+          // Left-diagonal
+          winner = board[0][0];
+        }
+        if (equals3(board[2][0], board[1][1], board[0][2])) {
+          // Right-diagonal
+          winner = board[2][0];
+        }
+
+        let openSpots = 0;
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            if (board[i][j] == "") {
+              // Calculate number of free spaces
+              openSpots++;
+            }
+          }
+        }
+
+        if (winner == null && openSpots == 0) {
+          return "tie"; // Return Tie if no free spots
+        } else {
+          return winner;
+        }
+      }
+
+      function mousePressed() {
+        if (currentPlayer == human) {
+          // Human make turn
+          let i = floor(mouseX / w);
+          let j = floor(mouseY / h);
+          // If valid turn
+          if (board[i][j] == "") {
+            board[i][j] = human; // Place O in the box
+            currentPlayer = ai; // Pass control to Computer
+            bestMove();
+          }
+        }
+      }
+
+      function draw() {
+        background(255, 156, 0);
+        strokeWeight(4);
+        stroke(255);
+        line(w, 0, w, height);
+        line(w * 2, 0, w * 2, height);
+        line(0, h, width, h);
+        line(0, h * 2, width, h * 2);
+
+        for (let j = 0; j < 3; j++) {
+          for (let i = 0; i < 3; i++) {
+            let x = w * i + w / 2;
+            let y = h * j + h / 2;
+            let spot = board[i][j];
+            textSize(32);
+            let r = w / 4;
+            if (spot == human) {
+              noFill();
+              ellipse(x, y, r * 2);
+            } else if (spot == ai) {
+              line(x - r, y - r, x + r, y + r);
+              line(x + r, y - r, x - r, y + r);
+            }
+          }
+        }
+
+        let result = checkWinner();
+        if (result != null) {
+          noLoop();
+          let resultP = createP("");
+          resultP.style("font-size", "32pt");
+          resultP.style("color", "white");
+          resultP.style("margin-left", "135px");
+          if (result == "tie") {
+            resultP.html("Tie!");
+          } else {
+            resultP.html(`${result} wins!`);
+          }
+        }
+      }
+
+
+
+
+
+
+      function bestMove() {
+        // Function for AI to decide which is the best move
+        let bestScore = -999999;
+        let move;
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            if (board[i][j] == "") {
+              // Is the spot available
+              board[i][j] = ai;
+              let score = minimax(board, 0, false);
+              board[i][j] = "";
+              if (score > bestScore) {
+                bestScore = score;
+                move = { i, j };
+              }
+            }
+          }
+        }
+        board[move.i][move.j] = ai;
+        currentPlayer = human;
+      }
+
+      let scores = {
+        X: 10,
+        O: -10,
+        tie: 0,
+      };
+
+      function minimax(board, depth, isMaximizing) {
+        let result = checkWinner();
+        if (result !== null) {
+          return scores[result];
+        }
+
+        if (isMaximizing) {
+          // if its the maximizing player find the best spot and return it
+          let bestScore = -999999;
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+              // Is the spot available?
+              if (board[i][j] == "") {
+                board[i][j] = ai;
+                let score = minimax(board, depth + 1, false);
+                board[i][j] = "";
+                bestScore = max(score, bestScore);
+              }
+            }
+          }
+          return bestScore;
+        } else {
+          let bestScore = 999999;
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+              // Is the spot available?
+              if (board[i][j] == "") {
+                board[i][j] = human;
+                let score = minimax(board, depth + 1, true);
+                board[i][j] = "";
+                bestScore = min(score, bestScore);
+              }
+            }
+          }
+          return bestScore;
+        }
+      }
+    </script>
+    </div>
+</body>
+
+</html>
